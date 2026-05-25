@@ -73,8 +73,30 @@ type EventListener = types.EventListener
 // ConnectionHandler defines the interface for socket connection management,
 // allowing the binding of events and gracefully closing the connection.
 type ConnectionHandler interface {
-	On(event string, handlers  ...EventListener)
+	On(event string, handlers ...EventListener)
 	Close(func(error))
+}
+
+// NewConnectionHandler creates and returns a new instance of [ConnectionHandler]
+// using the provided [*IO] instance.
+func NewConnectionHandler(io *IO) ConnectionHandler {
+	return &conectionHandlerAdapter{io: io}
+}
+
+// conectionHandlerAdapter implements the [ConnectionHandler] interface
+// by wrapping an internal [*IO] instance.
+type conectionHandlerAdapter struct {
+	io *IO
+}
+
+// On registers one or more [EventListener] handlers for a specific event on the underlying [*IO] instance.
+func (s *conectionHandlerAdapter) On(event string, handlers ...EventListener) {
+	s.io.On(event, handlers...)
+}
+
+// Close gracefully closes the underlying [*IO] connection and triggers the provided callback.
+func (s *conectionHandlerAdapter) Close(callback func(error)) {
+	s.io.Close(callback)
 }
 
 // SocketCloser manages the application lifecycle by listening for shutdown signals
