@@ -23,11 +23,10 @@ func (m *mockConnectionHandler) On(event string, handler func(args ...any)) {
 }
 
 // Close simulates closing the connection handler.
-func (m *mockConnectionHandler) Close(callback func(error)) error {
+func (m *mockConnectionHandler) Close(callback func(error)) {
 	if m.closeFunc != nil {
-		return m.closeFunc(callback)
+		m.closeFunc(callback)
 	}
-	return nil
 }
 
 func TestServer_IO(t *testing.T) {

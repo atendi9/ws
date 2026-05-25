@@ -71,7 +71,7 @@ func (s *Server) IO(
 // allowing the binding of events and gracefully closing the connection.
 type ConnectionHandler interface {
 	On(event string, handler func(args ...any))
-	Close(func(error)) error
+	Close(func(error))
 }
 
 // SocketCloser manages the application lifecycle by listening for shutdown signals
