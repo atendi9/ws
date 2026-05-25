@@ -15,13 +15,19 @@ import (
 // function to be executed when the event occurs.
 type Socket struct {
 	Name    string
-	Handler func(client *socket.Socket) func(args ...any)
+	Handler func(client *SocketClient) func(args ...any)
 }
 
 // Server wraps a [types.HttpServer] to provide socket.io initialization capabilities.
 type Server struct {
 	*types.HttpServer
 }
+
+// [socket.Server] alias for easier reference in the context of this package.
+type IO = socket.Server
+
+// [socket.Socket] alias for easier reference in the context of this package.
+type SocketClient = socket.Socket
 
 // IO initializes and returns a new [socket.Server]. It configures the underlying
 // [types.HttpServer] with the provided [http.Handler], binds it to the given addr,
@@ -30,7 +36,7 @@ func (s *Server) IO(
 	httpHandlers http.Handler,
 	addr string,
 	allowedOrigins []string,
-) *socket.Server {
+) *IO {
 	config := socket.DefaultServerOptions()
 	// Credentials may only be enabled for an explicit origin allowlist:
 	// the browser rejects "*" + credentials, and combining them invites
