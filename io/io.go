@@ -67,10 +67,13 @@ func (s *Server) IO(
 	return io
 }
 
+// [types.EventListener] alias for easier reference in the context of this package.
+type EventListener = types.EventListener
+
 // ConnectionHandler defines the interface for socket connection management,
 // allowing the binding of events and gracefully closing the connection.
 type ConnectionHandler interface {
-	On(event string, handler func(args ...any))
+	On(event string, handler EventListener)
 	Close(func(error))
 }
 

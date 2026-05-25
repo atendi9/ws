@@ -11,12 +11,12 @@ import (
 
 // mockConnectionHandler implements the ConnectionHandler interface for testing purposes.
 type mockConnectionHandler struct {
-	onFunc    func(event string, handler func(args ...any))
+	onFunc    func(event string, handler EventListener)
 	closeFunc func(func(error)) error
 }
 
 // On records or handles event registration.
-func (m *mockConnectionHandler) On(event string, handler func(args ...any)) {
+func (m *mockConnectionHandler) On(event string, handler EventListener) {
 	if m.onFunc != nil {
 		m.onFunc(event, handler)
 	}
@@ -57,11 +57,11 @@ func TestServer_IO(t *testing.T) {
 
 func TestInitSockets(t *testing.T) {
 	var onEventCalled string
-	var connectionCallback func(args ...any)
+	var connectionCallback EventListener
 	var closeCalled bool
 
 	mockIO := &mockConnectionHandler{
-		onFunc: func(event string, handler func(args ...any)) {
+		onFunc: func(event string, handler EventListener) {
 			onEventCalled = event
 			connectionCallback = handler
 		},
