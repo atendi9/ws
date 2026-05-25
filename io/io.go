@@ -73,7 +73,7 @@ type EventListener = types.EventListener
 // ConnectionHandler defines the interface for socket connection management,
 // allowing the binding of events and gracefully closing the connection.
 type ConnectionHandler interface {
-	On(event string, handler EventListener)
+	On(event string, handlers  ...EventListener)
 	Close(func(error))
 }
 
