@@ -6,8 +6,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/zishang520/socket.io/servers/socket/v3"
-	"github.com/zishang520/socket.io/v3/pkg/types"
+	"github.com/atendi9/ws/io/pkg/xhttp"
+	"github.com/atendi9/ws/io/server/socket"
+	"github.com/atendi9/ws/io/pkg/events"
 )
 
 // Socket represents a named socket event and its corresponding handler factory.
@@ -20,7 +21,7 @@ type Socket struct {
 
 // Server wraps a [types.HttpServer] to provide socket.io initialization capabilities.
 type Server struct {
-	*types.HttpServer
+	*xhttp.Server
 }
 
 // [socket.Server] alias for easier reference in the context of this package.
@@ -55,20 +56,20 @@ func (s *Server) IO(
 		origin = allowList
 		allowCredentials = true
 	}
-	config.SetCors(&types.Cors{
+	config.SetCors(&xhttp.Cors{
 		Origin:      origin,
 		Credentials: allowCredentials,
 	})
 	config.SetMaxHttpBufferSize(MaxHTTPBufferSize.Value())
-	s.HttpServer = types.NewWebServer(httpHandlers)
-	io := socket.NewServer(s.HttpServer, config)
+	s.Server = xhttp.NewServer(httpHandlers)
+	io := socket.NewServer(s.Server, config)
 
-	s.HttpServer.Listen(addr, nil)
+	s.Server.Listen(addr, nil)
 	return io
 }
 
 // [types.EventListener] alias for easier reference in the context of this package.
-type EventListener = types.EventListener
+type EventListener = events.Listener
 
 // ConnectionHandler defines the interface for socket connection management,
 // allowing the binding of events and gracefully closing the connection.

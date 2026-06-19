@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/atendi9/capivara/assert"
-	"github.com/zishang520/socket.io/servers/socket/v3"
+	"github.com/atendi9/ws/io/server/socket"
 )
 
 // mockConnectionHandler implements the ConnectionHandler interface for testing purposes.
@@ -35,11 +35,11 @@ func TestServer_IO(t *testing.T) {
 		mux := http.NewServeMux()
 
 		ioServer := server.IO(mux, "127.0.0.1:0", []string{"*"})
-		defer server.HttpServer.Close(nil)
+		defer server.Server.Close(nil)
 
 		assert.True(t, ioServer != nil)
 		// Internal check of the HttpServer assignment
-		assert.True(t, server.HttpServer != nil)
+		assert.True(t, server.Server != nil)
 	})
 
 	t.Run("explicit origins", func(t *testing.T) {
@@ -48,10 +48,10 @@ func TestServer_IO(t *testing.T) {
 		allowedOrigins := []string{"http://localhost:3000", "https://example.com"}
 
 		ioServer := server.IO(mux, "127.0.0.1:0", allowedOrigins)
-		defer server.HttpServer.Close(nil)
+		defer server.Server.Close(nil)
 
 		assert.True(t, ioServer != nil)
-		assert.True(t, server.HttpServer != nil)
+		assert.True(t, server.Server != nil)
 	})
 }
 
